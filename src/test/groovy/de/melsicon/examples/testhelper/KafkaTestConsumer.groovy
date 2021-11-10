@@ -7,15 +7,16 @@ import io.micronaut.configuration.kafka.annotation.Topic
 import jakarta.inject.Singleton
 import org.spockframework.util.Pair
 
+import java.util.concurrent.ConcurrentLinkedDeque
 import java.util.concurrent.LinkedBlockingDeque
 
 @Singleton
 @KafkaListener(groupId = "testconsumer", offsetReset = OffsetReset.EARLIEST)
 class KafkaTestConsumer {
-    def messages = new LinkedBlockingDeque<Pair<String, String>>()
+    static final Collection<String> messages = new ConcurrentLinkedDeque<>()
 
     @Topic("merged-topic-v1")
     receive(@KafkaKey String key, String value) {
-        messages.add(key, value)
+        messages.add(value)
     }
 }

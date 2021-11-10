@@ -8,6 +8,9 @@ import jakarta.inject.Inject
 
 import java.util.concurrent.TimeUnit
 
+import static java.util.concurrent.TimeUnit.SECONDS
+import static org.awaitility.Awaitility.await
+
 @MicronautTest
 class MergerStreamTest extends KafkaSpecification {
 
@@ -17,9 +20,6 @@ class MergerStreamTest extends KafkaSpecification {
     @Inject
     KafkaTestConsumer kafkaTestConsumer
 
-    def setupSpec() {
-        Thread.sleep(5000L)
-    }
 
     def "sendAndReceive"() {
         given:
@@ -30,9 +30,9 @@ class MergerStreamTest extends KafkaSpecification {
         kafkaTestProducer.sendSomething(key, value)
 
         then:
-        def result = kafkaTestConsumer.messages.poll(1000L, TimeUnit.MILLISECONDS)
-        result.first() == key
-        result.second() == value
+        await().atMost(10, SECONDS).until(() -> !kafkaTestConsumer.messages.isEmpty());
+        def result = kafkaTestConsumer.messages.first
+        result == value
 
     }
 }
