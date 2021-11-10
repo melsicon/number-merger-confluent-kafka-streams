@@ -8,15 +8,14 @@ import jakarta.inject.Singleton
 import org.spockframework.util.Pair
 
 import java.util.concurrent.ConcurrentLinkedDeque
-import java.util.concurrent.LinkedBlockingDeque
 
 @Singleton
 @KafkaListener(groupId = "testconsumer", offsetReset = OffsetReset.EARLIEST)
 class KafkaTestConsumer {
-    static final Collection<String> messages = new ConcurrentLinkedDeque<>()
+    static final Collection<Pair<String,String>> messages = new ConcurrentLinkedDeque<>()
 
     @Topic("merged-topic-v1")
     receive(@KafkaKey String key, String value) {
-        messages.add(value)
+        messages.add(Pair.of(key, value))
     }
 }

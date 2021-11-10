@@ -1,15 +1,12 @@
 package de.melsicon.examples;
 
 import io.micronaut.configuration.kafka.streams.ConfiguredStreamBuilder;
-import io.micronaut.context.annotation.Configuration;
 import io.micronaut.context.annotation.Factory;
 import jakarta.inject.Named;
 import jakarta.inject.Singleton;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.kafka.common.protocol.types.Field;
 import org.apache.kafka.common.serialization.Serdes;
 import org.apache.kafka.streams.StreamsConfig;
-import org.apache.kafka.streams.Topology;
 import org.apache.kafka.streams.kstream.KStream;
 
 import java.util.Properties;

@@ -6,8 +6,6 @@ import de.melsicon.examples.testhelper.KafkaTestProducer
 import io.micronaut.test.extensions.spock.annotation.MicronautTest
 import jakarta.inject.Inject
 
-import java.util.concurrent.TimeUnit
-
 import static java.util.concurrent.TimeUnit.SECONDS
 import static org.awaitility.Awaitility.await
 
@@ -32,7 +30,8 @@ class MergerStreamTest extends KafkaSpecification {
         then:
         await().atMost(10, SECONDS).until(() -> !kafkaTestConsumer.messages.isEmpty());
         def result = kafkaTestConsumer.messages.first
-        result == value
+        result.first() == key
+        result.second() == value
 
     }
 }
