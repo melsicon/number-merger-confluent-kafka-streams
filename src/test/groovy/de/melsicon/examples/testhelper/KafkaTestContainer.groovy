@@ -2,6 +2,7 @@ package de.melsicon.examples.testhelper
 
 import org.apache.kafka.clients.admin.AdminClient
 import org.apache.kafka.clients.admin.NewTopic
+import org.apache.kafka.common.protocol.types.Field.Str
 import org.testcontainers.containers.KafkaContainer
 import org.testcontainers.utility.DockerImageName
 
@@ -13,14 +14,15 @@ class KafkaTestContainer {
         kafkaContainer = new KafkaContainer(DockerImageName.parse("confluentinc/cp-kafka:6.2.1"))
                 .withEmbeddedZookeeper()
         kafkaContainer.start()
+        def bootstrapServers = kafkaContainer.getBootstrapServers()
 
-        createTopics(kafkaContainer)
+        createTopics(bootstrapServers)
 
     }
 
-    private static void createTopics() {
+    static def createTopics(String bootstrapServers) {
         def adminClient = AdminClient
-                .create(["bootstrap.servers": kafkaContainer.getBootstrapServers()])
+                .create(["bootstrap.servers": bootstrapServers])
         adminClient
                 .createTopics(["random-number-1-v1", "merged-topic-v1"]
                         .collect { topic -> new NewTopic(topic, 1, 1 as short) })
