@@ -29,7 +29,10 @@ class KafkaTestContainer {
     }
 
     static Map<String, String> getProperties() {
-        return ["bootstrap.servers": kafkaContainer.getBootstrapServers(),
-        "kafka.schema.registry.url": "mock://schemaregistry"]
+        def bootstrapServers = kafkaContainer.getBootstrapServers()
+        Map<String, String> configs = new HashMap<>()
+        configs.put("kafka.bootstrap.servers", bootstrapServers)
+        configs.put("kafka.schema.registry.url", "mock://schemaregistry")
+        return configs
     }
 }
